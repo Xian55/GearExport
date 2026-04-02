@@ -1,0 +1,7 @@
+## Interface: 11200
+## Title: GearExport
+## Author: Xii
+## Version: 1.0
+## Notes: Export your current Gear as Json for https://mrdobby92.github.io/TurtleAtlasLootWeb
+
+GearExport.xml

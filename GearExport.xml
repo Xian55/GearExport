@@ -1,0 +1,15 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+    <Script file="GearExport.lua"/>
+    <Frame name="GearExportFrame" hidden="true">
+        <Scripts>
+            <OnLoad>
+                GearExport_OnLoad()
+            </OnLoad>
+            <OnEvent>
+				GearExport_OnEvent(event);
+			</OnEvent>
+        </Scripts>
+    </Frame>
+</Ui>
+
+

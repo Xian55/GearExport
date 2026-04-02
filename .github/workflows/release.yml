@@ -1,0 +1,35 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Get version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Update .toc version
+        run: sed -i "s/^## Version: .*/## Version: ${{ steps.version.outputs.VERSION }}/" GearExport.toc
+
+      - name: Package addon
+        run: |
+          mkdir -p GearExport
+          cp GearExport.toc GearExport.xml GearExport.lua README.md GearExport/
+          zip -r GearExport-${{ steps.version.outputs.VERSION }}.zip GearExport/
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: GearExport-${{ steps.version.outputs.VERSION }}.zip
