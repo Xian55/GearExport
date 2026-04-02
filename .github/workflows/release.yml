@@ -17,19 +17,25 @@ jobs:
 
       - name: Get version from tag
         id: version
-        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          VERSION="${TAG#v}"
+          echo "VERSION=${VERSION}" >> "${GITHUB_OUTPUT}"
 
       - name: Update .toc version
-        run: sed -i "s/^## Version: .*/## Version: ${{ steps.version.outputs.VERSION }}/" GearExport.toc
+        run: |
+          VERSION="${{ steps.version.outputs.VERSION }}"
+          sed -i "s/^## Version: .*/## Version: ${VERSION}/" GearExport.toc
 
       - name: Package addon
         run: |
+          VERSION="${{ steps.version.outputs.VERSION }}"
           mkdir -p GearExport
           cp GearExport.toc GearExport.xml GearExport.lua README.md GearExport/
-          zip -r GearExport-${{ steps.version.outputs.VERSION }}.zip GearExport/
+          zip -r "GearExport-${VERSION}.zip" GearExport/
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           generate_release_notes: true
-          files: GearExport-${{ steps.version.outputs.VERSION }}.zip
+          files: "GearExport-${{ steps.version.outputs.VERSION }}.zip"
