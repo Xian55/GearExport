@@ -1,6 +1,6 @@
 # GearExport
 
-A [Turtle WoW](https://turtle-wow.org/) addon that exports your currently equipped gear as JSON, compatible with the [TurtleAtlasLoot Gear Planner](https://mrdobby92.github.io/TurtleAtlasLootWeb/gear-planner).
+A vanilla WoW addon that exports your currently equipped gear as JSON, compatible with the [TurtleAtlasLoot Gear Planner](https://mrdobby92.github.io/TurtleAtlasLootWeb/gear-planner).
 
 ## Features
 
@@ -59,5 +59,5 @@ All equipped items are exported with `"obtained": true`. Empty slots are skipped
 
 ## Compatibility
 
-- **Client:** Vanilla WoW 1.12 (Turtle WoW)
+- **Client:** Vanilla WoW 1.12
 - **Interface version:** 11200
