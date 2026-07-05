@@ -5,6 +5,7 @@ A vanilla WoW addon that exports your currently equipped gear as JSON, compatibl
 ## Features
 
 - Exports all 17 equipment slots (Head, Neck, Shoulder, Back, Chest, Wrist, Hands, Waist, Legs, Feet, Finger 1 & 2, Trinket 1 & 2, Main Hand, Off Hand, Ranged)
+- Includes the character's race, class, level, and any applied item enchants
 - Outputs JSON in the exact format the Gear Planner expects for import
 - Provides a scrollable, copy-friendly text window in-game
 - Supports custom set names
@@ -37,6 +38,9 @@ A window will appear with the JSON output. Use `Ctrl+A` to select all, then `Ctr
 [
   {
     "name": "Xii Gear",
+    "race": "Orc",
+    "class": "Warrior",
+    "level": 60,
     "slots": {
       "Back": {
         "itemId": 70008,
@@ -44,6 +48,7 @@ A window will appear with the JSON output. Use `Ctrl+A` to select all, then `Ctr
       },
       "Chest": {
         "itemId": 58030,
+        "enchantId": 1891,
         "obtained": true
       },
       "Feet": {
@@ -55,7 +60,7 @@ A window will appear with the JSON output. Use `Ctrl+A` to select all, then `Ctr
 ]
 ```
 
-All equipped items are exported with `"obtained": true`. Empty slots are skipped.
+All equipped items are exported with `"obtained": true`. Empty slots are skipped. `enchantId` is only included for items that carry an enchant.
 
 ## Compatibility
 

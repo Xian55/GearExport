@@ -23,14 +23,21 @@ local SLOT_MAP = {
 local function GetEquippedGearJSON(setName)
     setName = setName or UnitName("player") .. " Gear"
 
+    local race = UnitRace("player")
+    local class = UnitClass("player")
+    local level = UnitLevel("player")
+
     local slots = {}
     for slotId, slotName in pairs(SLOT_MAP) do
         local link = GetInventoryItemLink("player", slotId)
         if link then
-            local _, _, idStr = string.find(link, "item:(%d+)")
+            -- Link format: item:itemId:enchantId:suffixId:uniqueId
+            local _, _, idStr, enchantStr = string.find(link, "item:(%d+):(%d+)")
             if idStr then
                 local itemId = tonumber(idStr)
-                table.insert(slots, {name = slotName, itemId = itemId})
+                local enchantId = tonumber(enchantStr)
+                if enchantId == 0 then enchantId = nil end
+                table.insert(slots, {name = slotName, itemId = itemId, enchantId = enchantId})
             end
         end
     end
@@ -43,6 +50,9 @@ local function GetEquippedGearJSON(setName)
     table.insert(lines, "[")
     table.insert(lines, "  {")
     table.insert(lines, '    "name": "' .. setName .. '",')
+    table.insert(lines, '    "race": "' .. race .. '",')
+    table.insert(lines, '    "class": "' .. class .. '",')
+    table.insert(lines, '    "level": ' .. level .. ',')
     table.insert(lines, '    "slots": {')
 
     for i, slot in ipairs(slots) do
@@ -50,6 +60,9 @@ local function GetEquippedGearJSON(setName)
         if i == table.getn(slots) then comma = "" end
         table.insert(lines, '      "' .. slot.name .. '": {')
         table.insert(lines, '        "itemId": ' .. slot.itemId .. ',')
+        if slot.enchantId then
+            table.insert(lines, '        "enchantId": ' .. slot.enchantId .. ',')
+        end
         table.insert(lines, '        "obtained": true')
         table.insert(lines, "      }" .. comma)
     end
