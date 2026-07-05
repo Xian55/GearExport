@@ -53,13 +53,13 @@ A window will appear with the JSON output. Use `Ctrl+A` to select all, then `Ctr
         "enchantId": 1891,
         "obtained": true
       },
-      "Waist": {
-        "itemId": 7457,
-        "suffixId": -12,
-        "obtained": true
-      },
       "Feet": {
         "itemId": 21388,
+        "obtained": true
+      },
+      "Hands": {
+        "itemId": 7457,
+        "suffixId": 1199,
         "obtained": true
       }
     }
@@ -67,7 +67,7 @@ A window will appear with the JSON output. Use `Ctrl+A` to select all, then `Ctr
 ]
 ```
 
-All equipped items are exported with `"obtained": true`. Empty slots are skipped. `enchantId` is only included for items that carry an enchant, and `suffixId` only for items with a random suffix (e.g. "of the Bear"). Random suffix IDs may be negative.
+All equipped items are exported with `"obtained": true`. Empty slots are skipped. `enchantId` is only included for items that carry an enchant, and `suffixId` only for items with a random suffix (e.g. 7457 "of the Bear" reports suffixId 1199).
 
 ## Compatibility
 
