@@ -32,12 +32,15 @@ local function GetEquippedGearJSON(setName)
         local link = GetInventoryItemLink("player", slotId)
         if link then
             -- Link format: item:itemId:enchantId:suffixId:uniqueId
-            local _, _, idStr, enchantStr = string.find(link, "item:(%d+):(%d+)")
+            -- suffixId is the random suffix ("of the Bear"); can be negative in vanilla
+            local _, _, idStr, enchantStr, suffixStr = string.find(link, "item:(%d+):(%d+):(%-?%d+)")
             if idStr then
                 local itemId = tonumber(idStr)
                 local enchantId = tonumber(enchantStr)
                 if enchantId == 0 then enchantId = nil end
-                table.insert(slots, {name = slotName, itemId = itemId, enchantId = enchantId})
+                local suffixId = tonumber(suffixStr)
+                if suffixId == 0 then suffixId = nil end
+                table.insert(slots, {name = slotName, itemId = itemId, enchantId = enchantId, suffixId = suffixId})
             end
         end
     end
@@ -62,6 +65,9 @@ local function GetEquippedGearJSON(setName)
         table.insert(lines, '        "itemId": ' .. slot.itemId .. ',')
         if slot.enchantId then
             table.insert(lines, '        "enchantId": ' .. slot.enchantId .. ',')
+        end
+        if slot.suffixId then
+            table.insert(lines, '        "suffixId": ' .. slot.suffixId .. ',')
         end
         table.insert(lines, '        "obtained": true')
         table.insert(lines, "      }" .. comma)

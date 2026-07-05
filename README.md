@@ -7,7 +7,7 @@ Browse and share exported characters at the [Tortoise DB Viewer](https://xian55.
 ## Features
 
 - Exports all 17 equipment slots (Head, Neck, Shoulder, Back, Chest, Wrist, Hands, Waist, Legs, Feet, Finger 1 & 2, Trinket 1 & 2, Main Hand, Off Hand, Ranged)
-- Includes the character's race, class, level, and any applied item enchants
+- Includes the character's race, class, level, applied item enchants, and any random suffix (e.g. "of the Bear")
 - Outputs JSON in the exact format the Gear Planner expects for import
 - Provides a scrollable, copy-friendly text window in-game
 - Supports custom set names
@@ -53,6 +53,11 @@ A window will appear with the JSON output. Use `Ctrl+A` to select all, then `Ctr
         "enchantId": 1891,
         "obtained": true
       },
+      "Waist": {
+        "itemId": 7457,
+        "suffixId": -12,
+        "obtained": true
+      },
       "Feet": {
         "itemId": 21388,
         "obtained": true
@@ -62,7 +67,7 @@ A window will appear with the JSON output. Use `Ctrl+A` to select all, then `Ctr
 ]
 ```
 
-All equipped items are exported with `"obtained": true`. Empty slots are skipped. `enchantId` is only included for items that carry an enchant.
+All equipped items are exported with `"obtained": true`. Empty slots are skipped. `enchantId` is only included for items that carry an enchant, and `suffixId` only for items with a random suffix (e.g. "of the Bear"). Random suffix IDs may be negative.
 
 ## Compatibility
 
