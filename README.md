@@ -2,6 +2,8 @@
 
 A vanilla WoW addon that exports your currently equipped gear as JSON, compatible with the [TurtleAtlasLoot Gear Planner](https://mrdobby92.github.io/TurtleAtlasLootWeb/gear-planner).
 
+Browse and share exported characters at the [Tortoise DB Viewer](https://xian55.github.io/tortoise-db-viewer/?characters).
+
 ## Features
 
 - Exports all 17 equipment slots (Head, Neck, Shoulder, Back, Chest, Wrist, Hands, Waist, Legs, Feet, Finger 1 & 2, Trinket 1 & 2, Main Hand, Off Hand, Ranged)
