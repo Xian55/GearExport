@@ -20,19 +20,20 @@ local SLOT_MAP = {
     [18] = "Ranged",
 }
 
-local function GetEquippedGearJSON(setName)
-    setName = setName or UnitName("player") .. " Gear"
+local function GetEquippedGearJSON(setName, unit)
+    unit = unit or "player"
+    setName = setName or (UnitName(unit) .. " Gear")
 
-    local race = UnitRace("player")
-    local class = UnitClass("player")
-    local level = UnitLevel("player")
+    local race = UnitRace(unit)
+    local class = UnitClass(unit)
+    local level = UnitLevel(unit)
 
     local slots = {}
     for slotId, slotName in pairs(SLOT_MAP) do
-        local link = GetInventoryItemLink("player", slotId)
+        local link = GetInventoryItemLink(unit, slotId)
         if link then
             -- Link format: item:itemId:enchantId:suffixId:uniqueId
-            -- suffixId is the random suffix ("of the Bear"); can be negative in vanilla
+            -- suffixId is the random suffix ("of the Bear"); 0 when none
             local _, _, idStr, enchantStr, suffixStr = string.find(link, "item:(%d+):(%d+):(%-?%d+)")
             if idStr then
                 local itemId = tonumber(idStr)
@@ -77,7 +78,7 @@ local function GetEquippedGearJSON(setName)
     table.insert(lines, "  }")
     table.insert(lines, "]")
 
-    return table.concat(lines, "\n")
+    return table.concat(lines, "\n"), table.getn(slots)
 end
 
 -- EditBox frame for copy-paste (created on demand)
@@ -139,20 +140,67 @@ local function ShowExport(text)
     copyFrame.editBox:SetFocus()
 end
 
+local function Msg(text)
+    DEFAULT_CHAT_FRAME:AddMessage("|cff00ff00GearExport:|r " .. text)
+end
+
+-- NotifyInspect is async: the server delivers the target's item data a moment
+-- later, so wait a short delay before reading it back off the "target" unit.
+local inspectFrame = CreateFrame("Frame")
+inspectFrame:Hide()
+local inspectDelay = 0
+local inspectSetName = nil
+
+inspectFrame:SetScript("OnUpdate", function()
+    inspectDelay = inspectDelay + arg1
+    if inspectDelay < 0.5 then return end
+    inspectFrame:Hide()
+
+    if not UnitExists("target") or not UnitIsPlayer("target") then
+        Msg("target lost before inspect finished.")
+        return
+    end
+
+    local json, count = GetEquippedGearJSON(inspectSetName, "target")
+    if count == 0 then
+        Msg("no gear data for " .. (UnitName("target") or "target") ..
+            " -- must be a same-faction player within inspect range (~10 yd).")
+        return
+    end
+    ShowExport(json)
+end)
+
+-- Auto-detect: a valid (same-faction) player target is exported via inspect;
+-- otherwise the player's own gear is exported. The optional msg sets the name.
+local function ExportGear(msg)
+    local setName = msg
+    if not setName or setName == "" then setName = nil end
+
+    if UnitExists("target") and UnitIsPlayer("target") then
+        if not UnitIsFriend("player", "target") then
+            Msg("cannot inspect a hostile target -- exporting your own gear.")
+            ShowExport(GetEquippedGearJSON(setName, "player"))
+            return
+        end
+        NotifyInspect("target")
+        inspectSetName = setName
+        inspectDelay = 0
+        inspectFrame:Show()
+        Msg("inspecting " .. (UnitName("target") or "target") .. "...")
+    else
+        ShowExport(GetEquippedGearJSON(setName, "player"))
+    end
+end
+
 function GearExport_OnLoad()
     this:RegisterEvent("VARIABLES_LOADED")
-    DEFAULT_CHAT_FRAME:AddMessage("|cff00ff00GearExport|r loaded. Type |cffffff00/gearexport|r to export your gear.")
+    DEFAULT_CHAT_FRAME:AddMessage("|cff00ff00GearExport|r loaded. Type |cffffff00/gearexport|r to export your gear (or your target's).")
 end
 
 function GearExport_OnEvent(event)
     if event == "VARIABLES_LOADED" then
         SlashCmdList["GEAREXPORT"] = function(msg)
-            local setName = msg
-            if not setName or setName == "" then
-                setName = UnitName("player") .. " Gear"
-            end
-            local json = GetEquippedGearJSON(setName)
-            ShowExport(json)
+            ExportGear(msg)
         end
         SLASH_GEAREXPORT1 = "/gearexport"
         SLASH_GEAREXPORT2 = "/ge"

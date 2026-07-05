@@ -8,6 +8,7 @@ Browse and share exported characters at the [Tortoise DB Viewer](https://xian55.
 
 - Exports all 17 equipment slots (Head, Neck, Shoulder, Back, Chest, Wrist, Hands, Waist, Legs, Feet, Finger 1 & 2, Trinket 1 & 2, Main Hand, Off Hand, Ranged)
 - Includes the character's race, class, level, applied item enchants, and any random suffix (e.g. "of the Bear")
+- Exports **your target's** gear too — select a friendly player and run the command to inspect and export their equipment
 - Outputs JSON in the exact format the Gear Planner expects for import
 - Provides a scrollable, copy-friendly text window in-game
 - Supports custom set names
@@ -26,7 +27,19 @@ Browse and share exported characters at the [Tortoise DB Viewer](https://xian55.
 | `/ge` | Short alias for `/gearexport` |
 | `/gearexport My BIS Set` | Export gear with a custom set name |
 
+The command auto-detects your target: if you have a **friendly player** targeted, it inspects and exports **their** gear; otherwise it exports your own. A custom name still applies to whichever character is exported.
+
 A window will appear with the JSON output. Use `Ctrl+A` to select all, then `Ctrl+C` to copy it to your clipboard.
+
+### Exporting a target
+
+Inspecting another player is subject to the game's own limits:
+
+- The target must be a **player** (not an NPC) of the **same faction**
+- You must be within **inspect range** (~10 yards)
+- Inspection is asynchronous, so the window appears a fraction of a second after the command
+
+If no gear data comes back (out of range, wrong faction, target lost), a chat message explains why and nothing is exported.
 
 ## Import into Gear Planner
 
