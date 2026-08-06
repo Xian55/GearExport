@@ -3,7 +3,7 @@
     <Frame name="GearExportFrame" hidden="true">
         <Scripts>
             <OnLoad>
-                GearExport_OnLoad()
+                GearExport_OnLoad(self)
             </OnLoad>
             <OnEvent>
 				GearExport_OnEvent(event);
